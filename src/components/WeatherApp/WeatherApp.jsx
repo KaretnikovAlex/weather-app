@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import React from 'react';
 import axios from 'axios';
+import classes from './Weather.module.css'
 
 function WeatherApp() {
 
@@ -9,9 +10,6 @@ function WeatherApp() {
 
   let error;
 
-  function CityName() {
-    return info && "«" + city + "»"
-  }
   function RenderTemp() {
     return info && "Температура: " + info.main.temp + "C"
   }
@@ -46,14 +44,13 @@ function WeatherApp() {
 
 
   return (
-    <div className="App">
+    <div className={classes.weatherApp}>
 
       <input type="text" value={city} onChange={(event) => setCity(event.target.value)} placeholder="Введите название города латинскими буквами" />
       <Button></Button>
       <p className="error">{error}</p>
       <table>
         <tbody>
-          <tr><td><CityName></CityName></td></tr>
           <tr><td><RenderTemp></RenderTemp></td></tr>
           <tr><td><RenderFeels></RenderFeels></td></tr>
           <tr><td><RenderMinTemp></RenderMinTemp></td></tr>

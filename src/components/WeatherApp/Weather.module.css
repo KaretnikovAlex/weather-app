@@ -1,0 +1,8 @@
+.weatherApp {
+    display: flex;
+    padding: 40px 0;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 15px;
+}
