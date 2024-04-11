@@ -32,7 +32,7 @@ function App() {
     }
     error = '';
 
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${{ WEATHER_KEY }}`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=59197f73e0598660897bb078f407dc23`)
       .then(result => (setInfo(result.data)))
   }
 
