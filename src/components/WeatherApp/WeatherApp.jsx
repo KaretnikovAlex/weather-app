@@ -10,17 +10,43 @@ function WeatherApp() {
 
   let error;
 
+  function RenderDescription() {
+    return info && info.weather[0].description
+  }
+
   function RenderTemp() {
-    return info && "Температура: " + info.main.temp + "C"
+    if (info) {
+      return (info.main.temp > 0 ? "+" : "") + info.main.temp + "°"
+    }
   }
+
   function RenderFeels() {
-    return info && "Ощущается как: " + info.main.feels_like + "C"
+    if (info) {
+      return "Ощущается как: " + (info.main.feels_like > 0 ? "+" : "") + info.main.feels_like + "°"
+    }
   }
-  function RenderMinTemp() {
-    return info && "Минимальная температура: " + info.main.temp_min + "C"
+
+  function RenderIcon() {
+    return info && <img src={`https://openweathermap.org/img/wn/${info.weather[0].icon}@2x.png`} alt="weather icon" />
+    //return info && <img src={`https://openweathermap.org/img/wn/${info.weather[0].icon}@2x.png`} alt="weather icon" />
+
   }
-  function RenderMaxTemp() {
-    return info && "Максимальная температура: " + info.main.temp_max + "C"
+
+  function RenderHumidity() {
+    return info && "Влажность: " + info.main.humidity + "%"
+  }
+
+  function RenderWind() {
+    return info && "Ветер: " + info.wind.speed + "м/с"
+  }
+
+  function Button() {
+    if (city.length < 2) {
+      return <button disabled>Узнать погоду</button>
+    } else {
+      return <button onClick={getWeather}>Узнать погоду</button>
+    }
+
   }
 
   function getWeather() {
@@ -30,35 +56,28 @@ function WeatherApp() {
     }
     error = '';
 
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=59197f73e0598660897bb078f407dc23`)
-      .then(result => (setInfo(result.data)))
-  }
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&lang=ru&units=metric&appid=59197f73e0598660897bb078f407dc23`)
+      .then(result => (setInfo(result.data), console.log(result.data)));
 
-  function Button() {
-    if (city.length < 2) {
-      return <button disabled>Узнать погоду</button>
-    } else {
-      return <button onClick={getWeather}>Узнать погоду</button>
-    }
   }
-
 
   return (
-    <div className={classes.weatherApp}>
+    <section className={classes.weatherApp}>
 
       <input type="text" value={city} onChange={(event) => setCity(event.target.value)} placeholder="Введите название города латинскими буквами" />
       <Button></Button>
       <p className="error">{error}</p>
       <table>
         <tbody>
-          <tr><td><RenderTemp></RenderTemp></td></tr>
-          <tr><td><RenderFeels></RenderFeels></td></tr>
-          <tr><td><RenderMinTemp></RenderMinTemp></td></tr>
-          <tr><td><RenderMaxTemp></RenderMaxTemp></td></tr>
+          <tr><td><RenderDescription /></td></tr>
+          <tr><td className={classes.mainTemp}><p><RenderTemp /></p><RenderIcon /></td></tr>
+          <tr><td><RenderFeels /></td></tr>
+          <tr><td><RenderHumidity /></td></tr>
+          <tr><td><RenderWind /></td></tr>
         </tbody>
       </table>
 
-    </div>
+    </section>
   );
 }
 

@@ -5,4 +5,18 @@
     flex-direction: column;
     border: 1px solid black;
     border-radius: 15px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.mainTemp {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.mainTemp p {
+    display: inline-block;
+}
+
+.mainTemp img {
+    vertical-align: middle;
 }
