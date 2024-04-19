@@ -10,6 +10,10 @@ function WeatherApp() {
 
   let error;
 
+  function keyDown(event) {
+    event.key === "Enter" && getWeather()
+  }
+
   function RenderDescription() {
     return info && info.weather[0].description
   }
@@ -63,9 +67,15 @@ function WeatherApp() {
 
   return (
     <section className={classes.weatherApp}>
+      <div className={classes.search}>
+        <input type="text"
+          value={city}
+          onChange={(event) => setCity(event.target.value)}
+          onKeyDown={keyDown}
+          placeholder="Название города" />
 
-      <input type="text" value={city} onChange={(event) => setCity(event.target.value)} placeholder="Введите название города латинскими буквами" />
-      <Button></Button>
+        <Button />
+      </div>
       <p className="error">{error}</p>
       <table>
         <tbody>
