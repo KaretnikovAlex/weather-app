@@ -13,42 +13,6 @@ function WeatherApp() {
     event.key === "Enter" && getWeather()
   }
 
-  function RenderDescription() {
-    return info && info.weather[0].description[0].toUpperCase() + info.weather[0].description.slice(1) //получаем описание и делаем первую букву заглавной
-  }
-
-  function RenderTemp() {
-    if (info) {
-      return (info.main.temp > 0 ? "+" : "") + info.main.temp + "°"
-    }
-  }
-
-  function RenderFeels() {
-    if (info) {
-      return "Ощущается как: " + (info.main.feels_like > 0 ? "+" : "") + info.main.feels_like + "°"
-    }
-  }
-
-  function RenderIcon() {
-    return info && <img src={`https://openweathermap.org/img/wn/${info.weather[0].icon}@2x.png`} alt="weather icon" />
-  }
-
-  function RenderHumidity() {
-    return info && "Влажность: " + info.main.humidity + "%"
-  }
-
-  function RenderWind() {
-    return info && "Ветер: " + info.wind.speed + "м/с"
-  }
-
-  function Button() {
-    if (city.length < 2) {
-      return <button disabled><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path fill="currentColor" d="M11 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12m-8 6a8 8 0 1 1 14.281 4.955l4.419 4.33a1 1 0 1 1-1.4 1.43l-4.444-4.357A8 8 0 0 1 3 11"></path></svg></button>
-    } else {
-      return <button onClick={getWeather}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path fill="currentColor" d="M11 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12m-8 6a8 8 0 1 1 14.281 4.955l4.419 4.33a1 1 0 1 1-1.4 1.43l-4.444-4.357A8 8 0 0 1 3 11"></path></svg></button>
-    }
-  }
-
   function getWeather() {
     setError('');
     setInfo(null);// перед следующим запросом стираем прошлые данные
@@ -69,6 +33,48 @@ function WeatherApp() {
 
   }
 
+  const WeatherInfo = ({ info }) => {
+    if (!info) return null;
+
+    const RenderDescription = info.weather[0].description[0].toUpperCase() + info.weather[0].description.slice(1) //получаем описание и делаем первую букву заглавной
+    const temp = `${info.main.temp > 0 ? '+' : ''}${info.main.temp}°`;
+    const feelsLike = `Ощущается как: ${info.main.feels_like > 0 ? '+' : ''}${info.main.feels_like}°`;
+    const humidity = `Влажность: ${info.main.humidity}%`;
+    const wind = `Ветер: ${info.wind.speed} м/с`;
+    const iconUrl = `https://openweathermap.org/img/wn/${info.weather[0].icon}@2x.png`;
+
+    return (
+      <>
+        <tr>
+          <td className={classes.mainTemp}>
+            <p>{temp}</p>
+            <img src={iconUrl} alt="weather icon" />
+          </td>
+        </tr>
+        <tr>
+          <td>{RenderDescription}</td>
+        </tr>
+        <tr>
+          <td>{feelsLike}</td>
+        </tr>
+        <tr>
+          <td>{humidity}</td>
+        </tr>
+        <tr>
+          <td>{wind}</td>
+        </tr>
+      </>
+    );
+  };
+
+  const SearchButton = ({ disabled, onClick }) => (
+    <button onClick={onClick} disabled={disabled}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path fill="currentColor" d="M11 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12m-8 6a8 8 0 1 1 14.281 4.955l4.419 4.33a1 1 0 1 1-1.4 1.43l-4.444-4.357A8 8 0 0 1 3 11"></path>
+      </svg>
+    </button>
+  );
+
   return (
     <section className={classes.weatherApp}>
       <table>
@@ -80,16 +86,12 @@ function WeatherApp() {
                 onChange={(event) => setCity(event.target.value)}
                 onKeyDown={keyDown}
                 placeholder="Название города" />
-              <Button />
+              <SearchButton disabled={city.length < 2} onClick={getWeather} />
             </div>
-              <p>{error ? 'Город не найден': ''}</p></td>
+              <p>{error ? 'Город не найден' : ''}</p></td>
           </tr>
 
-          <tr><td className={classes.mainTemp}><p><RenderTemp /></p><RenderIcon /></td></tr>
-          <tr><td><RenderDescription /></td></tr>
-          <tr><td><RenderFeels /></td></tr>
-          <tr><td><RenderHumidity /></td></tr>
-          <tr><td><RenderWind /></td></tr>
+          <WeatherInfo info={info} />
         </tbody>
       </table>
 
