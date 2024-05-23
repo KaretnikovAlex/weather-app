@@ -8,30 +8,35 @@ function WeatherApp() {
   const [city, setCity] = useState('');
   const [error, setError] = useState('');
   const [info, setInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   function keyDown(event) {
     event.key === "Enter" && getWeather()
   }
 
-  function getWeather() {
+  const getWeather = async () => {
     setError('');
-    setInfo(null);// перед следующим запросом стираем прошлые данные
+    setInfo(null);
+    setLoading(true);
 
     if (city.trim().length < 2) {
-      return false;
+      setLoading(false);
+      return;
     }
 
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city.trim()}&lang=ru&units=metric&appid=59197f73e0598660897bb078f407dc23`)
-      .then(result => (setInfo(result.data)))
-      .catch(function (error) {
-        if (error.response) {
-          // Запрос был сделан, и сервер ответил кодом состояния, который
-          // выходит за пределы 2xx
-          setError(error.response.data.message);
-        }
-      });
-
-  }
+    try {
+      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city.trim()}&lang=ru&units=metric&appid=59197f73e0598660897bb078f407dc23`);
+      setInfo(response.data);
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Ошибка при загрузке данных');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const WeatherInfo = ({ info }) => {
     if (!info) return null;
