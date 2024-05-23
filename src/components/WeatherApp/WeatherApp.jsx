@@ -93,10 +93,16 @@ function WeatherApp() {
                 placeholder="Название города" />
               <SearchButton disabled={city.length < 2} onClick={getWeather} />
             </div>
-              <p>{error ? 'Город не найден' : ''}</p></td>
+            {error && <p>Город не найден</p>}</td>
           </tr>
 
-          <WeatherInfo info={info} />
+          {loading ? (
+            <tr>
+              <td>Загрузка...</td>
+            </tr>
+          ) : (
+            <WeatherInfo info={info} />
+          )}
         </tbody>
       </table>
 
