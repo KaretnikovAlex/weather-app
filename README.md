@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# React weather component 
 
 
 This repository contains an example of creating a React component that will receive detailed information about the weather in a specified city using the API.
